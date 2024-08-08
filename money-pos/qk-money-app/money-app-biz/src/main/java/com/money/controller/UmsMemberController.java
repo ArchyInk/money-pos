@@ -5,6 +5,7 @@ import com.money.common.vo.PageVO;
 import com.money.dto.UmsMember.UmsMemberDTO;
 import com.money.dto.UmsMember.UmsMemberQueryDTO;
 import com.money.dto.UmsMember.UmsMemberVO;
+import com.money.dto.UmsMember.MemberPayDTO;
 import com.money.service.UmsMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+
 /**
  * <p>
  * 会员表 前端控制器
@@ -56,5 +58,13 @@ public class UmsMemberController {
     @PreAuthorize("@rbac.hasPermission('umsMember:del')")
     public void delete(@RequestBody Set<Long> ids) {
         umsMemberService.delete(ids);
+    }
+
+
+    @Operation(summary = "充值")
+    @PostMapping("/pay")
+    @PreAuthorize("@rbac.hasPermission('umsMember:pay')")
+    public void pay(@RequestBody MemberPayDTO memberPayDTO) {
+        umsMemberService.pay(memberPayDTO.getId(), memberPayDTO.getAmount());
     }
 }

@@ -51,6 +51,12 @@ public class UmsMemberDTO {
     @Schema(description="抵用券")
     private BigDecimal coupon;
 
+    @Schema(description="余额")
+    private BigDecimal balance;
+
+    @Schema(description="赠送金额")
+    private BigDecimal giftAmount;
+
     @Schema(description="备注")
     @Size(max = 255, groups = {ValidGroup.Save.class, ValidGroup.Update.class})
     private String remark;

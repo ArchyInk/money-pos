@@ -45,6 +45,9 @@ public class UmsMemberVO {
     @Schema(description="抵用券")
     private BigDecimal coupon;
 
+    @Schema(description="余额")
+    private BigDecimal balance;
+
     @Schema(description="总消费金额")
     private BigDecimal consumeAmount;
 

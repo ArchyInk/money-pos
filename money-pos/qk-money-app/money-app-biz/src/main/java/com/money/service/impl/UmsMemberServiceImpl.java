@@ -36,15 +36,7 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
 
     @Override
     public PageVO<UmsMemberVO> list(UmsMemberQueryDTO queryDTO) {
-        Page<UmsMember> page = this.lambdaQuery()
-                .eq(StrUtil.isNotBlank(queryDTO.getCode()), UmsMember::getCode, queryDTO.getCode())
-                .like(StrUtil.isNotBlank(queryDTO.getName()), UmsMember::getName, queryDTO.getName())
-                .like(StrUtil.isNotBlank(queryDTO.getPhone()), UmsMember::getPhone, queryDTO.getPhone())
-                .eq(StrUtil.isNotBlank(queryDTO.getType()), UmsMember::getType, queryDTO.getType())
-                .eq(UmsMember::getDeleted, false)
-                .orderByDesc(StrUtil.isBlank(queryDTO.getOrderBy()), UmsMember::getUpdateTime)
-                .last(StrUtil.isNotBlank(queryDTO.getOrderBy()), queryDTO.getOrderBySql())
-                .page(PageUtil.toPage(queryDTO));
+        Page<UmsMember> page = this.lambdaQuery().eq(StrUtil.isNotBlank(queryDTO.getCode()), UmsMember::getCode, queryDTO.getCode()).like(StrUtil.isNotBlank(queryDTO.getName()), UmsMember::getName, queryDTO.getName()).like(StrUtil.isNotBlank(queryDTO.getPhone()), UmsMember::getPhone, queryDTO.getPhone()).eq(StrUtil.isNotBlank(queryDTO.getType()), UmsMember::getType, queryDTO.getType()).eq(UmsMember::getDeleted, false).orderByDesc(StrUtil.isBlank(queryDTO.getOrderBy()), UmsMember::getUpdateTime).last(StrUtil.isNotBlank(queryDTO.getOrderBy()), queryDTO.getOrderBySql()).page(PageUtil.toPage(queryDTO));
         return PageUtil.toPageVO(page, UmsMemberVO::new);
     }
 
@@ -80,19 +72,17 @@ public class UmsMemberServiceImpl extends ServiceImpl<UmsMemberMapper, UmsMember
     @Override
     public void consume(Long id, BigDecimal amount, BigDecimal coupon) {
         // 加总消费金额 加消费抵用券 减当前抵用券 消费次数加一
-        this.lambdaUpdate().setSql("consume_amount = consume_amount + " + amount +
-                ", consume_coupon = consume_coupon + " + coupon +
-                ", coupon = coupon - " + coupon +
-                ", consume_times = consume_times + 1").eq(UmsMember::getId, id).update();
+        this.lambdaUpdate().setSql("consume_amount = consume_amount + " + amount + ", consume_coupon = consume_coupon + " + coupon + ", coupon = coupon - " + coupon + ", consume_times = consume_times + 1").eq(UmsMember::getId, id).update();
     }
 
     @Override
     public void rebate(Long id, BigDecimal amount, BigDecimal coupon, boolean increaseCancelTimes) {
         // 减总消费金额 减费抵用券 退还当前抵用券 取消次数加一
-        this.lambdaUpdate().setSql("consume_amount = consume_amount - " + amount +
-                        ", consume_coupon = consume_coupon - " + coupon +
-                        ", coupon = coupon + " + coupon)
-                .setSql(increaseCancelTimes, "cancel_times = cancel_times + 1").eq(UmsMember::getId, id).update();
+        this.lambdaUpdate().setSql("consume_amount = consume_amount - " + amount + ", consume_coupon = consume_coupon - " + coupon + ", coupon = coupon + " + coupon).setSql(increaseCancelTimes, "cancel_times = cancel_times + 1").eq(UmsMember::getId, id).update();
     }
 
+    @Override
+    public void pay(Long id, BigDecimal amount) {
+        this.lambdaUpdate().setSql("balance = balance + " + amount).eq(UmsMember::getId, id).update();
+    }
 }

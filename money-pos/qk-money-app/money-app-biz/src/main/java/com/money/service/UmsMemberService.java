@@ -46,4 +46,12 @@ public interface UmsMemberService extends IService<UmsMember> {
      * @param increaseCancelTimes 增加退单次数
      */
     void rebate(Long id, BigDecimal amount, BigDecimal coupon, boolean increaseCancelTimes);
+
+    /**
+     * 充值
+     *
+     * @param id                  id
+     * @param amount              消费金额
+     */
+    void pay(Long id, BigDecimal amount);
 }

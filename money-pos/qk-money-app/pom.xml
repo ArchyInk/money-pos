@@ -22,5 +22,7 @@
         <module>money-app-system</module>
         <!-- 业务层 -->
         <module>money-app-biz</module>
+        <!-- 爬虫 -->
+        <module>money-spider</module>
     </modules>
 </project>
